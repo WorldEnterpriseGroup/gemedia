@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Peel - Responsive HTML5 Portfolio Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta charset="utf-8">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="css/core.css">
+    <link rel="stylesheet" type="text/css" href="css/animsition.min.css">
+    <link rel="stylesheet" type="text/css" href="css/elements.css">
+    <link rel="stylesheet" type="text/css" href="css/custom.css">
+    <link rel="icon" type="image/png" href="favicon.png?version=v1.0">
+  </head>
+  <body>
+    <div id="wrapper" class="animsition">
+      <div id="loader" class="fh">
+        <section class="vcenter">
+          <div class="container">
+            <div class="indicator"> <span class="number">00</span><span class="unit">%</span>
+              <div class="loadbar">
+                <div class="inner"></div>
+              </div>
+            </div>
+            <div class="img-count"><span class="loaded"></span><span class="description">images loaded</span></div>
+          </div>
+        </section>
+      </div>
+      <header id="main-header">
+        <div class="container">
+          <div class="grid">
+            <nav class="main-nav">
+              <div class="responsive-nav">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+              </div>
+              <ul class="nav-links">
+                <li class="col-1 brand"><a href="index.html"><img alt="Peel" src="images/logo.svg" class="default"></a></li>
+                <li class="col-1 has-dropdown"><a href="projects-4-columns.html" class="nav-link undefined">Projects</a>
+                  <ul class="dropdown">
+                    <li><a href="projects-1-column.html" class="nav-link undefined">Grid - One column</a>
+                    </li>
+                    <li><a href="projects-2-columns.html" class="nav-link undefined">Grid - Two columns</a>
+                    </li>
+                    <li><a href="projects-4-columns.html" class="nav-link undefined">Grid - Four columns</a>
+                    </li>
+                    <li><a href="projects-masonry.html" class="nav-link undefined">Grid - Masonry</a>
+                    </li>
+                    <li><a href="project-single.html" class="nav-link undefined">Project - Single</a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="col-1 col-offset-1"><a href="profile.html" class="nav-link undefined">Profile</a>
+                </li>
+                <li class="col-1 col-offset-1"><a href="journal.html" class="nav-link undefined">Journal</a>
+                  <ul class="dropdown">
+                    <li><a href="journal.html" class="nav-link undefined">Journal - Overview</a>
+                    </li>
+                    <li><a href="journal-single.html" class="nav-link undefined">Journal - Article</a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="col-1 col-offset-1"><a href="contact.html" class="active nav-link undefined">Contact</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
+      <div id="inner">
+        <section class="behind-header desktop">
+          <div style="background-image: url(images/contact/01.jpg);" class="bg faded"></div>
+          <div class="vbottom desktop fh">
+            <div class="container">
+              <div class="grid mb-xl">
+                <div class="col-4">
+                  <h3 class="mt-0">Let's create</h3>
+                </div>
+                <div class="col-2"><a href="mailto:peel@example.com">peel@example.com</a></div>
+                <div class="col-2"><span class="label label-white">12 (2) 4567 890</span></div>
+              </div>
+              <form id="form" action="php/mail.php" class="vbottom-desktop grid default-form no-spacing lined-form mb-xl">
+                <div class="col-2">
+                  <input required type="text" placeholder="Name" name="name" class="form-control">
+                </div>
+                <div class="col-2">
+                  <input required type="email" placeholder="Email address" name="email" class="form-control">
+                </div>
+                <div class="col-2">
+                  <textarea required placeholder="Message" name="message" class="small form-control"></textarea>
+                </div>
+                <div class="col-2">
+                  <input id="send" type="submit" value="Send" class="btn btn-primary">
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer>
+        <div class="container"><span>&copy; 2017 Peel Template. <a href="https://themeforest.net/item/peel-portfolio-template-for-creatives/19309134">Buy Peel</a></span></div>
+      </footer>
+    </div>
+    <script src="js/vendor.js"></script>
+    <script src="modules/titan-slider/titan-slider.js"></script>
+    <script src="modules/tera-lightbox/tera-lightbox.js"></script>
+    <script src="js/functions.js"></script>
+  </body>
+</html>
