@@ -4,31 +4,88 @@ This is a static GitHub Pages website. You are responsible for making it look ex
 
 ## Before You Start: Get Business Context
 
-**Every site belongs to a real business.** Before making any changes, fetch the business profile from the ORBITAL registry:
+**Every site belongs to a real business.** Before making ANY changes, fetch the business profile from the ORBITAL registry.
+
+**Repository:** `Om-Labs/registry` → `orbital/` directory on the `main` branch.
 
 ```bash
+# Fetch business entities (company names, descriptions, NAICS/SIC codes)
 gh api repos/Om-Labs/registry/contents/orbital/worlds.yaml --jq '.content' | base64 -d
+
+# Fetch website plans (planned nav structure, priority rankings)
 gh api repos/Om-Labs/registry/contents/orbital/websites.yaml --jq '.content' | base64 -d
 ```
 
-**`worlds.yaml`** contains 75 business entities with:
+**`Om-Labs/registry/orbital/worlds.yaml`** — 75 business entities:
 - Company name, type (LLC, Corp, etc.), location
 - Business category and description (what the company actually does)
 - NAICS/SIC/PSC industry codes
 
-**`websites.yaml`** contains planned website structure:
+**`Om-Labs/registry/orbital/websites.yaml`** — planned website structure:
 - Company name and URL
-- Planned navigation structure
+- Planned navigation structure (`nav` field)
 - Priority ranking
 
-**How to use this data:**
-1. Match the repo name or domain to the business entry
-2. Read the `description` field — it explains the company's purpose and positioning
-3. Check `websites.yaml` for the planned nav structure
-4. Let this context inform your content, tone, imagery, and design decisions
-5. The description is the source of truth for what the business does — do not invent or contradict it
+### Step 1: Match the business
 
-Example: `taomgt.com` → TAO MGT LTD → Consulting firm positioned like BCG/McKinsey → site should reflect premium business consulting.
+Find the entry matching this repo's name or domain. Read the `description` field — it is the **source of truth** for what the business does. Do not invent or contradict it.
+
+### Step 2: Align brand to industry codes
+
+If NAICS/SIC codes are provided, the site's visual brand, tone, and content MUST reflect those industries:
+- **Consulting (NAICS 5416xx)** — clean, authoritative, premium feel (think McKinsey, Deloitte)
+- **Education (NAICS 6116xx)** — warm, inviting, structured curriculum layout
+- **Technology (NAICS 5415xx)** — modern, innovative, technical credibility
+- **Healthcare (NAICS 621xxx)** — trustworthy, calming, HIPAA-aware language
+- **Fitness/Wellness (NAICS 7139xx)** — energetic, aspirational, action-oriented
+- **Legal (NAICS 5411xx)** — professional, conservative, trust-building
+- **Agriculture (NAICS 01xxxx)** — earthy, organic, sustainability-focused
+- **Finance (NAICS 5242xx)** — secure, precise, data-driven
+
+Use the NAICS/SIC codes to research what visual standards and UX patterns are expected in that industry. The brand should feel native to the industry, not generic.
+
+### Step 3: Align navigation
+
+If `websites.yaml` has a `nav` field for this site, the site's navigation MUST match it. Compare the current nav against the planned nav and update it. When updating navigation, update ALL `.html` files in the repo for consistency.
+
+### Step 4: GAP Analysis
+
+Before making changes, perform a GAP analysis — compare the current state of the site against what it should be:
+
+1. **Content gaps** — Is the site content aligned with the business description? Are there placeholder pages, missing sections, or content that contradicts the ORBITAL entry?
+2. **Navigation gaps** — Does the current nav match `websites.yaml`? Are there missing or extra pages?
+3. **Brand gaps** — Does the visual design match the industry and company positioning? Colors, typography, imagery appropriate?
+4. **Technical gaps** — Outdated frameworks? Missing accessibility? Poor performance? Non-AVIF images?
+5. **SEO gaps** — Missing meta tags, structured data, canonical URLs, sitemap?
+
+Document the gaps you find, then prioritize: content accuracy > accessibility > SEO > performance > visual polish.
+
+### Step 5: SEO Audit
+
+Check and fix these SEO fundamentals for every page:
+
+- [ ] Unique, descriptive `<title>` tag (under 60 chars, includes company name)
+- [ ] `<meta name="description">` (under 160 chars, matches page content)
+- [ ] One `<h1>` per page matching the page's primary topic
+- [ ] Proper heading hierarchy (`h1` > `h2` > `h3`, no skipped levels)
+- [ ] `<link rel="canonical">` pointing to the correct URL
+- [ ] Open Graph tags (`og:title`, `og:description`, `og:image`, `og:type`)
+- [ ] JSON-LD structured data (Organization, LocalBusiness, or appropriate schema)
+- [ ] All images have meaningful `alt` text (descriptive, not "image" or "photo")
+- [ ] Internal links use descriptive anchor text (not "click here")
+- [ ] No broken links (404s)
+- [ ] `robots.txt` exists and doesn't block important pages
+- [ ] `sitemap.xml` exists and lists all pages
+
+For the JSON-LD, use data from `worlds.yaml` — company name, description, category map to Schema.org types:
+- Consulting/Professional → `ProfessionalService`
+- Education → `EducationalOrganization`
+- Restaurant/Food → `Restaurant` or `FoodService`
+- Legal → `LegalService`
+- Healthcare → `MedicalOrganization`
+- General → `Organization`
+
+Example: `taomgt.com` → TAO MGT LTD → Consulting firm positioned like BCG/McKinsey → site should reflect premium business consulting with `ProfessionalService` schema.
 
 ## Skills
 
@@ -178,12 +235,17 @@ If a site has thin CSS (just a template with minimal customization), improve it:
 - One `<h1>` per page, proper heading hierarchy (`h1` > `h2` > `h3`)
 - Every `<img>` must have a meaningful `alt` attribute (never empty, never "image", never "photo")
 
-### Navigation consistency
+### Navigation — must match ORBITAL
 
-Navigation is copy-pasted across every HTML file. When updating navigation:
-- Update ALL `.html` files in the repo
-- Use grep/glob to find every file with the nav markup
-- Verify consistency across all pages
+Navigation MUST match the `nav` field from `Om-Labs/registry/orbital/websites.yaml`. If the current site nav differs from the planned nav, update it.
+
+When updating navigation:
+- Fetch `websites.yaml`: `gh api repos/Om-Labs/registry/contents/orbital/websites.yaml --jq '.content' | base64 -d`
+- Compare current nav against the `nav` field for this company
+- Add missing pages, remove pages not in the plan, reorder to match
+- Update ALL `.html` files in the repo — nav is copy-pasted across every file
+- Use grep/glob to find every file with the nav markup and verify consistency
+- Add `aria-current="page"` to the active nav link on each page
 
 ### Instant navigation
 
@@ -199,39 +261,101 @@ For multi-page sites, add the Speculation Rules API in `<head>` for instant page
 
 This prerenders pages when the user hovers over links, making navigation feel instant. Browsers that don't support it simply ignore the tag.
 
-### SEO & social
+### SEO & Social
 
-Every page should have:
+Every page MUST have these meta tags (populated from ORBITAL `worlds.yaml` data):
+
 ```html
+<title>Page Title — Company Name</title>
 <meta name="description" content="Concise page description under 160 chars">
-<meta property="og:title" content="Page Title">
+<meta property="og:title" content="Page Title — Company Name">
 <meta property="og:description" content="Same as meta description">
 <meta property="og:image" content="https://domain.com/assets/images/og-image.avif">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://domain.com/page">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://domain.com/page">
 ```
 
-Add JSON-LD structured data for rich search results:
+Add JSON-LD structured data using the appropriate Schema.org type for the business. Pull the company name, description, and NAICS from `Om-Labs/registry/orbital/worlds.yaml`:
+
 ```html
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Company Name",
+  "@type": "ProfessionalService",
+  "name": "Company Name from worlds.yaml",
   "url": "https://domain.com",
   "logo": "https://domain.com/assets/images/logo.avif",
-  "description": "What this company does"
+  "description": "Description from worlds.yaml",
+  "address": { "@type": "PostalAddress", "addressLocality": "Location from worlds.yaml" },
+  "naics": "NAICS code from worlds.yaml"
 }
 </script>
 ```
 
-### Accessibility
+Use the correct `@type`: `ProfessionalService`, `EducationalOrganization`, `Restaurant`, `LegalService`, `MedicalOrganization`, `SportsActivityLocation`, or `Organization` (see GAP analysis step for mapping).
 
-- All interactive elements must be keyboard-accessible
-- Color contrast ratio of at least 4.5:1 for body text, 3:1 for large text
-- Form inputs must have associated `<label>` elements
-- Skip-to-content link for keyboard users
-- `aria-label` on icon-only buttons and links
+Every site should also have:
+- `robots.txt` allowing crawling of all public pages
+- `sitemap.xml` listing all HTML pages with `<lastmod>` dates
+
+### Accessibility — WCAG 2.2 AA & Section 508
+
+All sites MUST meet **WCAG 2.2 Level AA** and **Section 508** compliance. This is not optional.
+
+**Perceivable:**
+- Color contrast: 4.5:1 minimum for body text, 3:1 for large text (18px+ or 14px+ bold)
+- Non-text contrast: 3:1 for UI components and graphical objects (borders, icons, focus indicators)
+- All images have meaningful `alt` text. Decorative images use `alt=""`
+- Video/audio has captions or transcripts (if applicable)
+- Content is readable and functional at 200% zoom without horizontal scrolling
+- No information conveyed by color alone — use icons, text, or patterns alongside color
+
+**Operable:**
+- All interactive elements keyboard-accessible (Tab, Enter, Space, Escape, Arrow keys)
+- Visible focus indicator on all focusable elements (minimum 2px outline, 3:1 contrast)
+- Skip-to-content link as the first focusable element: `<a href="#main" class="skip-link">Skip to content</a>`
+- No keyboard traps — users can always Tab away from any element
+- Focus order follows visual/logical reading order
+- Touch targets: minimum 24x24px (WCAG 2.2 new requirement)
+- No content that flashes more than 3 times per second
+
+**Understandable:**
+- Page language declared: `<html lang="en">`
+- Form inputs have associated `<label>` elements (use `for`/`id`, not just placeholder text)
+- Error messages are descriptive and associated with the input via `aria-describedby`
+- Consistent navigation across all pages
+- No unexpected context changes on focus or input
+
+**Robust:**
+- Valid HTML (no duplicate IDs, proper nesting, closed tags)
+- ARIA used correctly: `aria-label` on icon-only buttons, `aria-expanded` on toggles, `aria-current="page"` on active nav
+- Landmark roles: `<header>`, `<nav>`, `<main>`, `<footer>`, `<aside>` (semantic HTML preferred over ARIA roles)
+- Status messages use `aria-live="polite"` or `role="status"`
+
+**Section 508 specific:**
+- All the above WCAG 2.2 AA requirements (508 references WCAG 2.0 AA, but we exceed with 2.2)
+- No CAPTCHA without accessible alternative
+- Timed content has controls to pause, stop, or extend
+
+**CSS for accessibility:**
+```css
+/* Skip link */
+.skip-link { position: absolute; left: -9999px; top: auto; }
+.skip-link:focus { left: 1rem; top: 1rem; z-index: 9999; background: var(--primary); color: white; padding: 0.5rem 1rem; }
+
+/* Visible focus */
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+/* Minimum touch target */
+button, a, input, select, textarea { min-height: 24px; min-width: 24px; }
+```
 
 ## Fonts & Favicon
 
