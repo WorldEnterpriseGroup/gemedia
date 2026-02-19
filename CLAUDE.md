@@ -11,31 +11,14 @@ Use these skills when working on any site:
 
 ## ComfyUI Image Generation
 
-The ComfyUI API is available at `https://api.studio.hardmagic.com`. You can use either the `/comfyui` skill or call the API directly.
+The ComfyUI API is available at `https://api.studio.hardmagic.com` running the **Z-Image Turbo 6B** model (4 steps, ~6s/image). Default output format is AVIF.
 
-**Using the skill:**
+**Use the `/comfyui` skill** to generate images:
 ```
 /comfyui a professional hero image of a modern office space --profile hero-home --seed 42
 ```
 
-**Using the API directly:**
-```bash
-# Step 1: Build the workflow payload
-python3 scripts/skills/comfyui/workflow_builder.py \
-  --template scripts/skills/comfyui/templates/text-to-image-zimage-turbo.api.json \
-  --prompt "a professional hero image of a modern office space" \
-  --width 1024 --height 576 --seed 42 \
-  --output /tmp/comfyui-payload.json
-
-# Step 2: Submit to API and download
-python3 scripts/skills/comfyui/comfyui_client.py \
-  --url https://api.studio.hardmagic.com \
-  --payload /tmp/comfyui-payload.json \
-  --output-dir ./assets/images \
-  --format avif --timeout 120
-```
-
-**Model**: Z-Image Turbo 6B (4 steps, ~6s/image on RTX 3090). Default output format is AVIF.
+Available profiles: `hero-home` (16:9, 1024x576), `card-4x3` (4:3, 1024x768), `social-square` (1:1, 1024x1024).
 
 After generating, commit the `.avif` file directly into the repo's image directory.
 
@@ -44,6 +27,15 @@ After generating, commit the `.avif` file directly into the repo's image directo
 ### Format: AVIF only
 
 All images MUST be `.avif`. No PNG, no JPG, no unoptimized formats.
+
+**Convert all existing images to AVIF.** When working on any site, convert every existing JPG/PNG to AVIF, update all HTML/CSS references, and delete the old files. Use Pillow to batch-convert:
+
+```python
+from PIL import Image
+import pillow_avif
+img = Image.open("old-image.jpg")
+img.save("old-image.avif", quality=85)
+```
 
 ### Size: optimize for exact largest display size
 
@@ -89,13 +81,13 @@ For hero images that need multiple breakpoints, generate the image once at the l
 - Always include `width` and `height` attributes to prevent layout shift (CLS)
 - Preload the hero image: `<link rel="preload" as="image" href="hero.avif" type="image/avif">`
 
-## CSS & JavaScript — Upgrade Aggressively
+## CSS & JavaScript — Always Upgrade
 
-These sites use old templates (2016-2019 era). **Your job is to modernize them to 2026 standards.**
+These sites use old templates (2016-2019 era). **Always upgrade frameworks and modernize code, even for small changes.** Every touch is an opportunity to improve.
 
-### Framework upgrades
+### Framework upgrades (mandatory)
 
-When you encounter outdated frameworks, upgrade them:
+Every time you work on a site, upgrade its frameworks:
 
 | If you find... | Upgrade to... |
 |----------------|---------------|
@@ -106,6 +98,8 @@ When you encounter outdated frameworks, upgrade them:
 | Old Google Fonts `<link>` | `<link rel="preconnect">` + `display=swap` |
 
 If the site uses Tailwind, use the latest Tailwind via CDN Play. If it uses Material Design, use the latest Material Web Components. **Match and upgrade what's already there — don't switch frameworks.**
+
+When upgrading Bootstrap 3→5, fix the breaking changes: `col-xs-*` → `col-*`, `panel` → `card`, `btn-default` → `btn-outline-secondary`, `pull-right` → `float-end`, jQuery plugins → Bootstrap 5 vanilla JS, etc.
 
 ### Modern CSS (2026)
 
@@ -242,10 +236,18 @@ Aim for these Core Web Vitals on every page:
 
 Key levers: preload hero image, set `width`/`height` on all images, `defer` scripts, `content-visibility: auto` on below-fold sections, remove unused CSS/JS.
 
+## Git Workflow
+
+Push directly to `gh-pages`. No branches, no PRs. Changes go live immediately.
+
+```bash
+git add -A && git commit -m "description of changes" && git push origin gh-pages
+```
+
 ## Deployment
 
 - **Hosting**: GitHub Pages (static files only — no server-side code)
-- **Deploy trigger**: Push to the default branch
+- **Deploy trigger**: Push to `gh-pages` branch
 - **Custom domains**: Configured via `CNAME` file — **NEVER delete or modify it**
 
 ## What NOT To Do
@@ -259,3 +261,5 @@ Key levers: preload hero image, set `width`/`height` on all images, `defer` scri
 - NEVER reference external images by URL — commit all images to the repo
 - NEVER serve oversized images — match the image file size to its display size
 - NEVER use PHP, Python, or server-side code (GitHub Pages is static only)
+- NEVER leave old JPG/PNG images — convert everything to AVIF
+- NEVER leave outdated frameworks — always upgrade to latest
