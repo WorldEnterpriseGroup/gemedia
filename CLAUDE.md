@@ -2,6 +2,34 @@
 
 This is a static GitHub Pages website. You are responsible for making it look exceptional.
 
+## Before You Start: Get Business Context
+
+**Every site belongs to a real business.** Before making any changes, fetch the business profile from the ORBITAL registry:
+
+```bash
+gh api repos/Om-Labs/registry/contents/orbital/worlds.yaml --jq '.content' | base64 -d
+gh api repos/Om-Labs/registry/contents/orbital/websites.yaml --jq '.content' | base64 -d
+```
+
+**`worlds.yaml`** contains 75 business entities with:
+- Company name, type (LLC, Corp, etc.), location
+- Business category and description (what the company actually does)
+- NAICS/SIC/PSC industry codes
+
+**`websites.yaml`** contains planned website structure:
+- Company name and URL
+- Planned navigation structure
+- Priority ranking
+
+**How to use this data:**
+1. Match the repo name or domain to the business entry
+2. Read the `description` field — it explains the company's purpose and positioning
+3. Check `websites.yaml` for the planned nav structure
+4. Let this context inform your content, tone, imagery, and design decisions
+5. The description is the source of truth for what the business does — do not invent or contradict it
+
+Example: `taomgt.com` → TAO MGT LTD → Consulting firm positioned like BCG/McKinsey → site should reflect premium business consulting.
+
 ## Skills
 
 Use these skills when working on any site:
