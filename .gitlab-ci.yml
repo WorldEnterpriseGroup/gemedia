@@ -1,0 +1,13 @@
+# gemedia — GitLab Pages deploy + GitHub mirror
+#
+# demo branch  → deploys to GitLab Pages (internal via Ziti)
+# gh-pages     → mirrors to GitHub Pages (public)
+
+include:
+  - project: 'FocusApiary/ci-templates'
+    ref: main
+    file: '/pipelines/static-site.yml'
+
+variables:
+  GITHUB_REPO: "WorldEnterpriseGroup/gemedia"
+  SITE_DIR: "."
